@@ -3,6 +3,15 @@ const { StatusCodes } = require('http-status-codes');
 const CustomError = require('../errors');
 
 const register = async (req, res) => {
+  const { email } = req.body;
+
+  // Throw error if email is already registered
+  const emailAlreadyExists = await User.findOne({ email });
+  if (emailAlreadyExists) {
+    throw new CustomError.BadRequestError('Email already exists');
+  }
+
+  // Create User
   const user = await User.create(req.body);
   res.status(StatusCodes.CREATED).json({ user });
 };
