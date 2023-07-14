@@ -9,6 +9,7 @@ const app = express();
 
 // rest of the packages
 const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
 
 // database
 const connectDB = require('./db/connect');
@@ -21,12 +22,17 @@ const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
 
 
-// logging request details
-app.use(morgan('tiny'))
-// It parses incoming JSON requests and puts the parsed data in req.body
-app.use(express.json());
+app.use(morgan('tiny')); // logging request details
+app.use(express.json()); // It parses incoming JSON requests and puts the parsed data in req.body
+app.use(cookieParser()); // Parse the cookie
+
 
 app.get('/', (req, res) => {
+  res.send('e-commerce api');
+});
+
+app.get('/api/v1', (req, res) => {
+  console.log(req.cookies);
   res.send('e-commerce api');
 });
 
