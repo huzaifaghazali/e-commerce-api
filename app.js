@@ -15,17 +15,15 @@ const cookieParser = require('cookie-parser');
 const connectDB = require('./db/connect');
 
 // routers
-const authRouter = require('./routes/authRoutes')
+const authRouter = require('./routes/authRoutes');
 
 // middleware
 const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
 
-
 app.use(morgan('tiny')); // logging request details
 app.use(express.json()); // It parses incoming JSON requests and puts the parsed data in req.body
 app.use(cookieParser()); // Parse the cookie
-
 
 app.get('/', (req, res) => {
   res.send('e-commerce api');
