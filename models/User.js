@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
-// check if email is valid or not
-const validator = require('validator');
+const validator = require('validator'); // check if email is valid or not
+const bcrypt = require('bcryptjs');
+
 const UserSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -28,5 +29,21 @@ const UserSchema = new mongoose.Schema({
     default: 'user',
   },
 });
+
+
+
+// ***** Mongoose Middleware *****
+// Hash the password
+UserSchema.pre('save', async function () {
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+})
+
+// ***** Instance method *****
+// Compare password when login
+UserSchema.methods.comparePassword = async function(candidatePassword) {
+  const isMatch = await bcrypt.compare(candidatePassword, this.password)
+  return isMatch;
+}
 
 module.exports = mongoose.model('User', UserSchema);
