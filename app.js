@@ -23,14 +23,14 @@ const errorHandlerMiddleware = require('./middleware/error-handler');
 
 app.use(morgan('tiny')); // logging request details
 app.use(express.json()); // It parses incoming JSON requests and puts the parsed data in req.body
-app.use(cookieParser()); // Parse the cookie
+app.use(cookieParser(process.env.JWT_SECRET)); // Parse the cookie
 
 app.get('/', (req, res) => {
   res.send('e-commerce api');
 });
 
 app.get('/api/v1', (req, res) => {
-  console.log(req.cookies);
+  console.log(req.signedCookies);
   res.send('e-commerce api');
 });
 
