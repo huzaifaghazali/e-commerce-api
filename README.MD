@@ -1,6 +1,3 @@
-## Hosted Project
-
-[E-Commerce API Render URL](https://node-course-e-commerce.onrender.com/)
 
 #### Setup Basic Express Server
 
@@ -21,11 +18,11 @@
 - [] setup / GET Route
 - [] setup express.json() middleware
 - [] setup 404 and errorHandler middleware
-- [] import 'exress-async-errors' package
+- [] import 'express-async-errors' package
 
 #### 404 vs ErrorHandler Middleware
 
-#### Morgan Pacakge
+#### Morgan Package
 
 - [Morgan Package](https://www.npmjs.com/package/morgan)
 
@@ -190,7 +187,7 @@
 - [] setup productRoutes file in routes
 - [] import all controllers
 - [] only getAllProducts and getSingleProduct accessible to public
-- [] rest only by admin (setup middlewares)
+- [] rest only by admin (setup middleware)
 - [] typical setup
 - [] router.route('/uploadImage').post(uploadImage)
 - [] import productRoutes as productRouter in the app.js
@@ -324,7 +321,7 @@
 #### Get All Orders and Get Single Order
 
 - [] getAllOrders - admin only
-- [] getSingleOrder - chechPermissions
+- [] getSingleOrder - checkPermissions
 
 #### Get Current User Orders
 
