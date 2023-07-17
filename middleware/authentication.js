@@ -10,12 +10,12 @@ const authenticateUser = async (req, res, next) => {
   }
 
   try {
-    const {name, userId, role} = isTokenValid({ token }); // verify the token
-
-    // Create request object named user
-    req.user = { name, userId, role}
+    const { name, userId, role } = isTokenValid({ token }); // verify the token
+    req.user = { name, userId, role }; // Create request object named user
     next(); // Go to the next middleware
-  } catch (error) {}
+  } catch (error) {
+    throw new CustomError.UnauthenticatedError('Authentication Invalid');
+  }
 };
 
 module.exports = {
