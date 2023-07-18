@@ -16,7 +16,8 @@ const {
 // Authenticate the user then check its role (i.e admin)
 router.route('/').get(authenticateUser, authorizePermissions('admin', 'owner'), getAllUser);
 
-router.route('/showMe').get(showCurrentUser); // If it is below id route it will throw error that it can not find id
+// Authenticate the user checked if it logged in or not
+router.route('/showMe').get(authenticateUser, showCurrentUser); // If it is below id route it will throw error that it can not find id
 
 router.route('/updateUser').patch(updateUser);
 router.route('/updateUserPassword').patch(updateUserPassword);
