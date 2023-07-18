@@ -1,10 +1,12 @@
 const CustomError = require('../errors');
 const { isTokenValid } = require('../utils');
 
+// Function to check user if it logged in or not
 const authenticateUser = async (req, res, next) => {
   // Get the cookie named token
   const token = req.signedCookies.token;
 
+  // Throw error if token not found
   if (!token) {
     throw new CustomError.UnauthenticatedError('Authentication Invalid');
   }
@@ -18,6 +20,7 @@ const authenticateUser = async (req, res, next) => {
   }
 };
 
+// Function to check the role of user
 const authorizePermission = (req, res, next) => {
   if (req.user.role !== 'admin') {
     throw new CustomError.UnauthorizedError(
