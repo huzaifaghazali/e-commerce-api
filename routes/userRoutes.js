@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const {
   authenticateUser,
-  authorizePermission,
+  authorizePermissions,
 } = require('../middleware/authentication');
 
 const {
@@ -14,7 +14,7 @@ const {
 } = require('../controllers/userController');
 
 // Authenticate the user then check its role (i.e admin)
-router.route('/').get(authenticateUser, authorizePermission, getAllUser);
+router.route('/').get(authenticateUser, authorizePermissions('admin', 'owner'), getAllUser);
 
 router.route('/showMe').get(showCurrentUser); // If it is below id route it will throw error that it can not find id
 

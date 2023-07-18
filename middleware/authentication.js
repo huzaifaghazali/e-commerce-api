@@ -21,16 +21,19 @@ const authenticateUser = async (req, res, next) => {
 };
 
 // Function to check the role of user
-const authorizePermission = (req, res, next) => {
-  if (req.user.role !== 'admin') {
-    throw new CustomError.UnauthorizedError(
-      'Unauthorized to access this route'
-    );
-  }
-  next();
+const authorizePermissions = (...roles) => {
+  return (req, res, next) => {
+    // If roles array does match with req.user.role than throw error
+    if (!roles.includes(req.user.role)) {
+      throw new CustomError.UnauthorizedError(
+        'Unauthorized to access this route'
+      );
+    }
+    next();
+  };
 };
 
 module.exports = {
   authenticateUser,
-  authorizePermission,
+  authorizePermissions,
 };
