@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const { StatusCodes } = require('http-status-codes');
 const CustomError = require('../errors');
+const { createTokenUser, attachCookiesToResponse } = require('../utils');
 
 const getAllUser = async (req, res) => {
   // Get all the users where role is user and don't select password
@@ -25,7 +26,27 @@ const showCurrentUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  res.send(req.body);
+  const { email, name } = req.body;
+
+  // Throw error if email and name is empty
+  if (!email || !name) {
+    throw new CustomError.BadRequestError('Please provide all values');
+  }
+
+  // Update the user whose id is in the request user object
+  const user = await User.findOneAndUpdate(
+    { _id: req.user.userId },
+    { email, name },
+    { new: true, runValidators: true }
+  );
+
+  // Create Token user
+  const tokenUser = createTokenUser(user);
+
+  // Create a cookie name token
+  attachCookiesToResponse({ res, user: tokenUser });
+
+  res.status(StatusCodes.OK).json({ user: tokenUser });
 };
 
 const updateUserPassword = async (req, res) => {

@@ -19,7 +19,8 @@ router.route('/').get(authenticateUser, authorizePermissions('admin', 'owner'), 
 // Authenticate the user checked if it logged in or not
 router.route('/showMe').get(authenticateUser, showCurrentUser); // If it is below id route it will throw error that it can not find id
 
-router.route('/updateUser').patch(updateUser);
+// Authenticate the user checked if it logged in and then update user
+router.route('/updateUser').patch(authenticateUser, updateUser);
 // Only Logged in user can changed the password
 router.route('/updateUserPassword').patch(authenticateUser,updateUserPassword);
 
