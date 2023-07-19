@@ -9,6 +9,7 @@ const getAllUser = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ users });
 };
+
 const getSingleUser = async (req, res) => {
   // Get the user with specific ID without selecting password
   const user = await User.findOne({ _id: req.params.id }).select('-password');
@@ -25,6 +26,33 @@ const showCurrentUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ user: req.user });
 };
 
+// Update user with user.save();
+const updateUser = async (req, res) => {
+  const { email, name } = req.body;
+
+  // Throw error if email and name is empty
+  if (!email || !name) {
+    throw new CustomError.BadRequestError('Please provide all values');
+  }
+
+  // Update the user whose id is in the request user object
+  const user = await User.findOne({ _id: req.user.userId });
+  user.email = email;
+  user.name = name;
+
+  await user.save();
+
+  // Create Token user
+  const tokenUser = createTokenUser(user);
+
+  // Create a cookie name token
+  attachCookiesToResponse({ res, user: tokenUser });
+
+  res.status(StatusCodes.OK).json({ user: tokenUser });
+};
+
+// update user with  findOneAndUpdate
+/*
 const updateUser = async (req, res) => {
   const { email, name } = req.body;
 
@@ -48,6 +76,7 @@ const updateUser = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ user: tokenUser });
 };
+*/
 
 const updateUserPassword = async (req, res) => {
   const { oldPassword, newPassword } = req.body;
