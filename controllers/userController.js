@@ -1,7 +1,11 @@
 const User = require('../models/User');
 const { StatusCodes } = require('http-status-codes');
 const CustomError = require('../errors');
-const { createTokenUser, attachCookiesToResponse } = require('../utils');
+const {
+  createTokenUser,
+  attachCookiesToResponse,
+  checkPermissions,
+} = require('../utils');
 
 const getAllUser = async (req, res) => {
   // Get all the users where role is user and don't select password
@@ -18,6 +22,9 @@ const getSingleUser = async (req, res) => {
   if (!user) {
     throw new CustomError.NotFoundError(`No user with id: ${req.params.id}`);
   }
+
+  // Check the user permission
+  checkPermissions(req.user, user._id);
 
   res.status(StatusCodes.OK).json({ user });
 };
@@ -40,7 +47,7 @@ const updateUser = async (req, res) => {
   user.email = email;
   user.name = name;
 
-  await user.save();
+  await user.save(); // invoke the save mongoose middleware
 
   // Create Token user
   const tokenUser = createTokenUser(user);
