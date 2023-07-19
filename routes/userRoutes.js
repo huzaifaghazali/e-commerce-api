@@ -21,9 +21,11 @@ router.route('/showMe').get(authenticateUser, showCurrentUser); // If it is belo
 
 // Authenticate the user checked if it logged in and then update user
 router.route('/updateUser').patch(authenticateUser, updateUser);
+
 // Only Logged in user can changed the password
 router.route('/updateUserPassword').patch(authenticateUser,updateUserPassword);
-
+ 
+// Authenticate the user can only see the user
 router.route('/:id').get(authenticateUser, getSingleUser);
 
 module.exports = router;
