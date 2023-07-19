@@ -1,3 +1,8 @@
+### Env variables
+Create the following env variables in your .env file
+- MONGO_URL
+- JWT_SECRET
+- JWT_LIFETIME
 
 #### Setup Basic Express Server
 
