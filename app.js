@@ -10,6 +10,7 @@ const app = express();
 // rest of the packages
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
+const fileUpload = require('express-fileupload');
 
 // database
 const connectDB = require('./db/connect');
@@ -26,6 +27,8 @@ const errorHandlerMiddleware = require('./middleware/error-handler');
 app.use(morgan('tiny')); // logging request details
 app.use(express.json()); // It parses incoming JSON requests and puts the parsed data in req.body
 app.use(cookieParser(process.env.JWT_SECRET)); // Parse the cookie
+app.use(express.static('./public')); // Access public folder
+app.use(fileUpload()) // Invoke the fileUpload middleware
 
 app.get('/', (req, res) => {
   res.send('e-commerce api');
