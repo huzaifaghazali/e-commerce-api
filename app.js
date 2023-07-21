@@ -19,6 +19,7 @@ const connectDB = require('./db/connect');
 const authRouter = require('./routes/authRoutes');
 const userRouter = require('./routes/userRoutes');
 const productRouter = require('./routes/productRoutes');
+const reviewRouter = require('./routes/reviewRoutes');
 
 // middleware
 const notFoundMiddleware = require('./middleware/not-found');
@@ -28,7 +29,7 @@ app.use(morgan('tiny')); // logging request details
 app.use(express.json()); // It parses incoming JSON requests and puts the parsed data in req.body
 app.use(cookieParser(process.env.JWT_SECRET)); // Parse the cookie
 app.use(express.static('./public')); // Access public folder
-app.use(fileUpload()) // Invoke the fileUpload middleware
+app.use(fileUpload()); // Invoke the fileUpload middleware
 
 app.get('/', (req, res) => {
   res.send('e-commerce api');
@@ -42,7 +43,8 @@ app.get('/api/v1', (req, res) => {
 // Routers middleware
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
-app.use('/api/v1/products', productRouter)
+app.use('/api/v1/products', productRouter);
+app.use('./api/v1/reviews', reviewRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
