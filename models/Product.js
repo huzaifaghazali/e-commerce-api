@@ -82,4 +82,10 @@ ProductSchema.virtual('reviews', {
   justOne: false, // This indicates that the virtual property should be populated with an array of reviews.
 });
 
+// Mongoose middleware
+// When product is deleted also delete the reviews which are associated with the product
+ProductSchema.pre('remove', async function (next) {
+  await this.model('Review').deleteMany({ product: this._id });
+});
+
 module.exports = mongoose.model('Product', ProductSchema);
