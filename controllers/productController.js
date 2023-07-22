@@ -24,8 +24,8 @@ const getAllProducts = async (req, res) => {
 const getSingleProduct = async (req, res) => {
   const { id: productId } = req.params;
 
-  // Get the product with specific ID
-  const product = await Product.findOne({ _id: productId });
+  // Get the product with specific ID and also get all reviews which are present on product
+  const product = await Product.findOne({ _id: productId }).populate('reviews');
 
   // Throw error if product is not present
   if (!product) {

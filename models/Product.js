@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const ProductSchema =new mongoose.Schema(
+const ProductSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -67,7 +67,19 @@ const ProductSchema =new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true }
+  // toJSON -> When the document is converted to JSON (i.e toJSON() or JSON.stringify()) the virtual properties defined in the schema will be included in the JSON representation.
+  // toObject -> when the document is converted to a plain JavaScript object (i.e toObject()) the virtual properties will be included in the resulting object
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
+
+// Defined virtual property called 'reviews' on the schema. Virtual properties are additional properties that do not exist in the actual MongoDB document but can be accessed as if they were real properties.
+
+// Get the reviews associated with single product
+ProductSchema.virtual('reviews', {
+  ref: 'Review', // It should be populated using Review model. Review is reference to other model
+  localField: '_id', // It will be populated based on matching the _id field of the current product with the 'product' field in the 'Review' model.
+  foreignField: 'product', //  It means that the virtual property will be populated with reviews that have a matching 'product' field equal to the _id of the current product.
+  justOne: false, // This indicates that the virtual property should be populated with an array of reviews.
+});
 
 module.exports = mongoose.model('Product', ProductSchema);
