@@ -15,6 +15,8 @@ const {
   uploadImage,
 } = require('../controllers/productController');
 
+const { getSingleProductReviews } = require('../controllers/reviewController');
+
 router
   .route('/')
   .post([authenticateUser, authorizePermissions('admin')], createProduct) // Authenticate the user then check its role to create product
@@ -30,5 +32,6 @@ router
   .patch([authenticateUser, authorizePermissions('admin')], updateProduct) // Authenticate the user then check its role to update product
   .delete([authenticateUser, authorizePermissions('admin')], deleteProduct); // Authenticate the user then check its role to delete product
 
+router.route('/:id/reviews').get(getSingleProductReviews);
 
 module.exports = router;
