@@ -37,7 +37,34 @@ ReviewSchema.index({ product: 1, user: 1 }, { unique: true });
 
 // Static methods -> we are not calling it on the instance that we create. We actually call it on the schema.
 ReviewSchema.statics.calculateAverageRating = async function (productId) {
-  console.log(productId);
+  
+  // Aggregate Pipeline
+  const result = await this.aggregate([
+    { $match: { product: productId } },
+    {
+      $group: {
+        _id: null,
+        averageRating: {
+          $avg: '$rating',
+        },
+        numOfReviews: {
+          $sum: 1,
+        },
+      },
+    },
+  ]);
+
+  try {
+    await this.model('Product').findOneAndUpdate(
+      { _id: productId },
+      {
+        averageRating: Math.ceil(result[0]?.averageRating || 0), // if result is empty then averageRating is 0
+        numOfReviews:result[0]?.numOfReviews || 0, // if result is empty then numOfReviews is 0
+      }
+    );
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 // ***** Mongoose Middleware *****
