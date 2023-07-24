@@ -40,16 +40,16 @@ ReviewSchema.statics.calculateAverageRating = async function (productId) {
   console.log(productId);
 };
 
+// ***** Mongoose Middleware *****
+// Pre-Save Hook: This middleware will be called before saving a new review document
 ReviewSchema.post('save', async function () {
   // Calling the static methods
   await this.constructor.calculateAverageRating(this.product);
-  console.log('post save hook called');
 });
-
+// Post-Save Hook: This middleware will be called after deleting a review document
 ReviewSchema.post('remove', async function () {
   // Calling the static methods
   await this.constructor.calculateAverageRating(this.product);
-  console.log('post remove hook called');
 });
 
 module.exports = mongoose.model('Review', ReviewSchema);
