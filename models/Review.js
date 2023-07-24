@@ -35,4 +35,21 @@ const ReviewSchema = new mongoose.Schema(
 // User can give one review per product -> one user -> one review -> on one product
 ReviewSchema.index({ product: 1, user: 1 }, { unique: true });
 
+// Static methods -> we are not calling it on the instance that we create. We actually call it on the schema.
+ReviewSchema.statics.calculateAverageRating = async function (productId) {
+  console.log(productId);
+};
+
+ReviewSchema.post('save', async function () {
+  // Calling the static methods
+  await this.constructor.calculateAverageRating(this.product);
+  console.log('post save hook called');
+});
+
+ReviewSchema.post('remove', async function () {
+  // Calling the static methods
+  await this.constructor.calculateAverageRating(this.product);
+  console.log('post remove hook called');
+});
+
 module.exports = mongoose.model('Review', ReviewSchema);
