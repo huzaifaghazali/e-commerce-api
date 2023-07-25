@@ -1,5 +1,62 @@
+const { StatusCodes } = require('http-status-codes');
+
+const Order = require('../models/Order');
+const Product = require('../models/Product');
+const CustomError = require('../errors');
+
+const { checkPermissions } = require('../utils');
+
 const createOrder = async (req, res) => {
-  res.send('Create an order');
+  const { items: cartItems, tax, shippingFee } = req.body;
+
+  // Throw error if cart item doesn't exits or it's length is < 1
+  if (!cartItems || cartItems.length < 1) {
+    throw new CustomError.BadRequestError('No cart items provided');
+  }
+
+  // Throw error if tax and shipping fee are does not exit
+  if (!tax || !shippingFee) {
+    throw new CustomError.BadRequestError(
+      'Please provide tax and shipping fee'
+    );
+  }
+
+  let orderItems = [];
+  let subtotal = 0; // It is the price multiplied by quantity for every item
+
+  // This loop gives the value in cartItems array
+  for (const item of cartItems) {
+    // Get the product whose ID matches with cartItem product ID
+    const dbProduct = await Product.findOne({ _id: item.product });
+
+    // Throw error if dbProduct do not exist;
+    if (!dbProduct) {
+      throw new CustomError.NotFoundError(
+        `No product with id: ${item.product}`
+      );
+    }
+
+    // Access the product from the DB
+    const { name, price, image, _id } = dbProduct;
+    const singleOrderItem = {
+      amount: item.amount,
+      name,
+      price,
+      image,
+      product: _id,
+    };
+
+    // Add Item to order
+    orderItems = [...orderItems, singleOrderItem];
+
+    // Calculate subtotal
+    subtotal += item.amount * price;
+  }
+
+  console.log(orderItems);
+  console.log(subtotal);
+
+  res.send('create Order');
 };
 const getAllOrders = async (req, res) => {
   res.send('Get All Orders');
