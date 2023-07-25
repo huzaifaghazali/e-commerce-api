@@ -70,7 +70,7 @@ ReviewSchema.statics.calculateAverageRating = async function (productId) {
 };
 
 // ***** Mongoose Middleware *****
-// Pre-Save Hook: This middleware will be called before saving a new review document
+// Pre-Save Hook: This middleware will be called after saving a new review document
 ReviewSchema.post('save', async function () {
   // Calling the static methods
   await this.constructor.calculateAverageRating(this.product);
